@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Catálogo — Subir imágenes, Excel y PDF (9 por hoja)</title>
+  <style>
+    :root{--accent:#0ea5e9;--muted:#6b7280}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; margin:18px; background:#f8fafc; color:#0f172a}
+    .container{max-width:1100px;margin:0 auto}
+    h1{font-size:1.3rem;margin-bottom:6px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    button{background:var(--accent);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#e5e7eb;color:#111}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    .card{background:white;border-radius:8px;padding:10px;box-shadow:0 2px 6px rgba(2,6,23,0.06);display:flex;flex-direction:column;gap:8px}
+    .thumb{width:100%;height:160px;object-fit:cover;border-radius:6px;background:#f3f4f6}
+    input, textarea{padding:8px;border-radius:6px;border:1px solid #e5e7eb}
+    .row{display:flex;gap:8px;align-items:center}
+    .price-input{width:100px}
+    .actions{display:flex;gap:8px;justify-content:flex-end}
+    .remove{background:#ef4444}
+    footer{margin-top:18px;text-align:right;color:var(--muted);font-size:0.9rem}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .loader{display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid rgba(0,0,0,.08);border-top-color:var(--accent);animation:spin .8s linear infinite;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    table.meta{width:100%;border-collapse:collapse}
+    table.meta td{padding:4px}
+  </style>
+
+  <!-- libs -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Catálogo — 9 imágenes por hoja (A4)</h1>
+    <p class="small">Subí imágenes, ponles nombre (clave), precio y descripción. Podés importar/preparar precios desde Excel y al exportar PDF se imprimen 9 por hoja.</p>
+
+    <div class="controls">
+      <label class="small">Subir imágenes: <input id="fileInput" type="file" accept="image/*" multiple></label>
+      <button id="addBlank">Añadir vacío</button>
+
+      <button id="exportPdf">Exportar PDF (9 por hoja)</button>
+
+      <button id="exportXls" class="secondary">Exportar Excel</button>
+      <button id="importXls" class="secondary">Importar Excel</button>
+      <input id="xlsFile" type="file" accept=".xlsx,.xls" style="display:none" />
+
+      <button id="exportJson" class="secondary">Exportar JSON</button>
+      <button id="importJson" class="secondary">Importar JSON</button>
+      <input id="jsonFile" type="file" accept="application/json" style="display:none" />
+      <input id="footerLeftInput" placeholder="Texto footer izquierda" style="width:200px" />
+<input id="footerRightInput" placeholder="Texto footer derecha" style="width:200px" />
+<input id="bgColorInput" placeholder="Color fondo RGBA (ej: 240,240,240,0.3)" style="width:150px" />
+<label class="small" style="margin-left:8px;">
+  Subir fondo PDF (imagen transparente):
+  <input type="file" id="backgroundImageInput" accept="image/*" />
+
+<!-- 1. En el HTML controls -->
+
+
+</label>
+
+
+    </div>
+
+    <div id="grid" class="grid" aria-live="polite"></div>
+
+    <footer>
+      <span class="small">Estado: </span><span id="status" class="small">Listo</span>
+    </footer>
+  </div>
+
+  <script>
+    // ---------- Config / Estado ----------
+    const saveKey = 'catalogo_products_v2';
+    const grid = document.getElementById('grid');
+    const fileInput = document.getElementById('fileInput');
+    let footerLeftText = "Texto pequeño a la izquierda"; 
+let footerRightText = "TEXTO GRANDE A LA DERECHA";
+let backgroundColor = [240, 240, 240, 0.3]; // RGBA con opacidad para fondo semitransparente
+let backgroundImage = null; // Puedes dejar null o asignar base64 si quieres imagen de fondo
+
+    const addBlankBtn = document.getElementById('addBlank');
+    const exportPdfBtn = document.getElementById('exportPdf');
+    const exportXlsBtn = document.getElementById('exportXls');
+    const importXlsBtn = document.getElementById('importXls');
+    const xlsFileInput = document.getElementById('xlsFile');
+    const exportJsonBtn = document.getElementById('exportJson');
+    const importJsonBtn = document.getElementById('importJson');
+    const jsonFileInput = document.getElementById('jsonFile');
+    const backgroundImageInput = document.getElementById('backgroundImageInput');
+
+    const statusEl = document.getElementById('status');
+
+    let products = loadFromStorage() || [];
+
+    function setStatus(text, busy=false){
+      statusEl.innerHTML = busy ? `<span class="loader"></span> ${text}` : text;
+    }
+
+    function uuid(){ return 'p-' + Math.random().toString(36).slice(2,9); }
+    function saveToStorage(){ try{ localStorage.setItem(saveKey, JSON.stringify(products)); }catch(e){ console.warn('localStorage fail',e); } }
+    function loadFromStorage(){ try{ const s=localStorage.getItem(saveKey); return s?JSON.parse(s):null; }catch(e){return null;} }
+
+    // ---------- Image resizing ----------
+    async function resizeDataUrl(dataUrl, maxWidth = 1200, quality = 0.8){
+      return new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxWidth / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', quality);
+          res(compressed);
+        };
+        img.onerror = rej;
+        img.src = dataUrl;
+      });
+    }
+
+    // ---------- UI Render ----------
+    function render(){
+      grid.innerHTML = '';
+      if (!products.length){
+        const p=document.createElement('div'); p.className='small'; p.textContent='No hay productos. Sube imágenes o añade un producto vacío.'; grid.appendChild(p); return;
+      }
+      for (const prod of products){
+        const card = document.createElement('div'); card.className='card'; card.dataset.id = prod.id;
+
+        const img = document.createElement('img'); img.className='thumb'; img.alt = prod.name || 'Producto'; img.src = prod.image || '';
+        card.appendChild(img);
+
+        const name = document.createElement('input'); name.value = prod.name || ''; name.placeholder = 'Nombre (clave, único)'; name.oninput = (e)=>{ prod.name = e.target.value; saveToStorage(); };
+        card.appendChild(name);
+
+        const priceRow = document.createElement('div'); priceRow.className='row';
+        const priceInput = document.createElement('input'); priceInput.type='number'; priceInput.step='0.01'; priceInput.min='0'; priceInput.value = prod.price ?? ''; priceInput.className='price-input';
+        priceInput.oninput = (e)=>{ prod.price = e.target.value; saveToStorage(); };
+        priceRow.appendChild(priceInput);
+        const cur = document.createElement('div'); cur.className='small'; cur.textContent='ARS'; priceRow.appendChild(cur);
+        card.appendChild(priceRow);
+
+        const desc = document.createElement('textarea'); desc.rows=3; desc.placeholder='Descripción'; desc.value = prod.description || ''; desc.oninput=(e)=>{ prod.description = e.target.value; saveToStorage(); };
+        card.appendChild(desc);
+
+        const actions = document.createElement('div'); actions.className='actions';
+        const replaceBtn = document.createElement('button'); replaceBtn.textContent='Reemplazar imagen'; replaceBtn.className='secondary';
+        replaceBtn.onclick = ()=> replaceImage(prod.id);
+        actions.appendChild(replaceBtn);
+
+        const removeBtn = document.createElement('button'); removeBtn.textContent='Eliminar'; removeBtn.className='remove';
+        removeBtn.onclick = ()=>{ products = products.filter(p=>p.id!==prod.id); saveToStorage(); render(); };
+        actions.appendChild(removeBtn);
+
+        card.appendChild(actions);
+        grid.appendChild(card);
+      }
+    }
+
+    // ---------- Handlers ----------
+    fileInput.addEventListener('change', async (ev)=>{
+      const files = Array.from(ev.target.files || []);
+      if (!files.length) return;
+      setStatus('Procesando imágenes...', true);
+      for (const file of files){
+        try{
+          const dataUrl = await readFileAsDataURL(file);
+          const resized = await resizeDataUrl(dataUrl, 1200, 0.8);
+          // garantizamos que cada producto tenga la propiedad price (aunque vacía)
+          products.push({ id: uuid(), name: '', price: '', description: '', image: resized });
+        }catch(e){ console.error('Error procesando archivo', e); }
+      }
+      saveToStorage();
+      render();
+      setStatus('Listo');
+      fileInput.value = '';
+    });
+
+    addBlankBtn.addEventListener('click', ()=>{ products.push({ id: uuid(), name: '', price: '', description: '', image: '' }); saveToStorage(); render(); });
+
+    exportJsonBtn.addEventListener('click', ()=> {
+      const blob = new Blob([JSON.stringify(products, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob); downloadUrl(url, 'catalogo.json'); URL.revokeObjectURL(url);
+    });
+
+    importJsonBtn.addEventListener('click', ()=> jsonFileInput.click());
+    jsonFileInput.addEventListener('change', async (e)=>{
+      const f = e.target.files?.[0]; if (!f) return;
+      try{
+        const txt = await f.text(); const parsed = JSON.parse(txt);
+        if (!Array.isArray(parsed)) throw new Error('Formato inválido');
+        products = parsed.map(p=>({ id: p.id || uuid(), name: p.name || '', price: p.price || '', description: p.description || '', image: p.image || '' }));
+        saveToStorage(); render();
+      }catch(err){ alert('Error importando JSON: ' + (err.message || err)); }
+      jsonFileInput.value = '';
+    });
+
+    // ---------- Excel Import/Export (SheetJS) ----------
+    exportXlsBtn.addEventListener('click', ()=>{
+      // columns: name, price, description
+      const wsData = [['name','price','description']];
+      for (const p of products) wsData.push([p.name || '', p.price || '', p.description || '']);
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      XLSX.utils.book_append_sheet(wb, ws, 'productos');
+      const wbout = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+      const blob = new Blob([wbout], {type:'application/octet-stream'});
+      const url = URL.createObjectURL(blob);
+      downloadUrl(url, 'catalogo.xlsx'); URL.revokeObjectURL(url);
+    });
+
+    importXlsBtn.addEventListener('click', ()=> xlsFileInput.click());
+    xlsFileInput.addEventListener('change', async (e)=>{
+      const f = e.target.files?.[0]; if (!f) return;
+      try{
+        const data = await f.arrayBuffer();
+        const wb = XLSX.read(data, {type:'array'});
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+        // Expect header row -> ['name','price','description']
+        const header = (rows[0]||[]).map(h => String(h).toLowerCase().trim());
+        const nameIdx = header.indexOf('name');
+        const priceIdx = header.indexOf('price');
+        const descIdx = header.indexOf('description');
+        if (nameIdx === -1) { alert('El archivo debe incluir columna "name" (nombre del producto)'); xlsFileInput.value=''; return; }
+
+        // map import rows into objects and update products by name (clave)
+        const updates = [];
+        for (let r=1; r<rows.length; r++){
+          const row = rows[r];
+          const name = String(row[nameIdx] ?? '').trim();
+          if (!name) continue;
+          const price = row[priceIdx] ?? '';
+          const description = row[descIdx] ?? '';
+          // find product by name
+          const idx = products.findIndex(p => (p.name || '').trim().toLowerCase() === name.toLowerCase());
+          if (idx >= 0){
+            products[idx].price = String(price);
+            products[idx].description = String(description);
+            updates.push(name);
+          } else {
+            // If doesn't exist, we add it without image (user can later assign)
+            products.push({ id: uuid(), name, price: String(price), description: String(description), image: '' });
+            updates.push(name + ' (creado sin imagen)');
+          }
+        }
+        saveToStorage(); render();
+        alert('Importación completa. Actualizados/creados: ' + updates.length);
+      }catch(err){ console.error(err); alert('Error al importar XLS'); }
+      xlsFileInput.value = '';
+    });
+
+    // ---------- Replace single image ----------
+    async function replaceImage(prodId){
+      const file = await pickSingleFile();
+      if (!file) return;
+      const dataUrl = await readFileAsDataURL(file);
+      const resized = await resizeDataUrl(dataUrl, 1200, 0.8);
+      const idx = products.findIndex(p=>p.id===prodId);
+      if (idx>=0){ products[idx].image = resized; saveToStorage(); render(); }
+    }
+
+    // ---------- PDF Generation (9 por hoja) ----------
+    // A4 dimensions in mm: 210 x 297
+exportPdfBtn.addEventListener('click', async () => {
+  if (!products.length) { alert('No hay productos'); return; }
+  setStatus('Generando PDF... esto puede tardar', true);
+  await generatePdfNinePerPage(products, footerLeftText, footerRightText, { color: backgroundColor, image: backgroundImage });
+  setStatus('PDF generado');
+});
+
+
+  async function generatePdfNinePerPage(items, footerLeftText = "", footerRightText = "", backgroundOptions = {}) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  const cols = 3, rows = 3;
+  const cellW = (pageW - margin * 2) / cols;
+  const cellH = (pageH - margin * 2) / rows;
+  const imgAreaH = cellH * 0.65;
+  const textAreaH = cellH - imgAreaH;
+  const padding = 4;
+  const footerHeight = 12;
+
+  for (let i = 0; i < items.length; i += 9) {
+    if (i > 0) doc.addPage();
+
+    if (backgroundOptions.image) {
+      doc.addImage(backgroundOptions.image, 'PNG', 0, 0, pageW, pageH, undefined, 'FAST');
+    } else if (backgroundOptions.color) {
+      const [r, g, b, a = 1] = backgroundOptions.color;
+      doc.setFillColor(r, g, b);
+      // jsPDF no maneja alpha directo, simulamos con color sólido
+      doc.rect(0, 0, pageW, pageH, 'F');
+    } else {
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, pageW, pageH, 'F');
+    }
+
+    // Dibujar productos en página actual
+    const chunk = items.slice(i, i + 9);
+    for (let j = 0; j < chunk.length; j++) {
+      const prod = chunk[j];
+      const col = j % cols;
+      const row = Math.floor(j / cols);
+      const x = margin + col * cellW + padding;
+      const y = margin + row * cellH + padding;
+      const availW = cellW - padding * 2;
+      const availH = imgAreaH - padding * 2;
+
+      if (prod.image) {
+        await addImageToDoc(doc, prod.image, x, y, availW, availH);
+      } else {
+        doc.setFillColor(245, 245, 245);
+        doc.rect(x, y, availW, availH, 'F');
+        doc.setFontSize(9);
+        doc.setTextColor(130);
+        doc.text('Sin imagen', x + availW / 2, y + availH / 2, { align: 'center', baseline: 'middle' });
+      }
+
+      // Nombre
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      const splitName = doc.splitTextToSize(prod.name || "Sin nombre", availW);
+      doc.text(splitName, x, y + availH + 4);
+
+      // ----- PRECIO DESACTIVADO: no se imprime ningún precio en el PDF -----
+      // Si en el futuro querés habilitar precio, descomentá y ajustá según necesidad.
+      // doc.setFontSize(10);
+      // doc.setFont(undefined, 'bold');
+      // const priceY = y + availH + 4 + splitName.length * 5 + 2;
+      // if (prod.price != null && String(prod.price).trim() !== "") {
+      //   doc.text(formatCurrency(prod.price), x, priceY);
+      // }
+
+// Descripción con soporte para negrita *texto* y colores {red}texto{/red}
+if (prod.description) {
+
+    const descY = y + availH + 4 + splitName.length * 5 + 5;
+    let cursorY = descY;
+
+    // Partimos la descripción por líneas
+    const lines = prod.description.split('\n');
+
+    for (let rawLine of lines) {
+
+        let xPos = x;
+        let fragments = [];
+
+        // 🚀 Detectar colores y negrita
+        // Primero color {color}texto{/color}
+        const colorRegex = /\{(red|blue|green)\}(.*?)\{\/\1\}/g;
+        let colorProcessed = rawLine;
+        let colorMatches = [];
+
+        let cMatch;
+        while ((cMatch = colorRegex.exec(rawLine)) !== null) {
+            colorMatches.push({
+                full: cMatch[0],
+                color: cMatch[1],
+                text: cMatch[2]
+            });
+        }
+
+        // Reemplazar colores por marcadores internos para no romper el regex de negrita
+        colorMatches.forEach((cm, i) => {
+            colorProcessed = colorProcessed.replace(cm.full, `@@COLOR${i}@@`);
+        });
+
+        // Segundo: detectar negrita *texto*
+        const regex = /\*(.*?)\*|([^*]+)/g;
+        let match;
+        let tempFragments = [];
+
+        while ((match = regex.exec(colorProcessed)) !== null) {
+            if (match[1]) {
+                tempFragments.push({ text: match[1], bold: true, color: null });
+            } else if (match[2]) {
+                tempFragments.push({ text: match[2], bold: false, color: null });
+            }
+        }
+
+        // Reinsertar colores
+        tempFragments.forEach(f => {
+            let newText = f.text;
+            const re = /@@COLOR(\d+)@@/g;
+            let m;
+            while ((m = re.exec(f.text)) !== null) {
+                const cData = colorMatches[m[1]];
+                newText = newText.replace(m[0], cData.text);
+                f.color = cData.color;
+            }
+            f.text = newText;
+        });
+
+        fragments = tempFragments;
+
+        // -------- RENDER FINAL --------
+        fragments.forEach(frag => {
+
+            // fuente
+            doc.setFont(undefined, frag.bold ? "bold" : "normal");
+            doc.setFontSize(frag.bold ? 11 : 9);
+
+            // color
+            if (frag.color === "red") doc.setTextColor(255, 0, 0);
+            else if (frag.color === "blue") doc.setTextColor(0, 0, 255);
+            else if (frag.color === "green") doc.setTextColor(0, 150, 0);
+            else doc.setTextColor(0, 0, 0);
+
+            // cortar si es largo
+            const parts = doc.splitTextToSize(frag.text, availW);
+
+            parts.forEach(p => {
+                doc.text(p, xPos, cursorY);
+                cursorY += 5;
+            });
+        });
+
+        cursorY += 2; // espacio entre líneas
+    }
+
+    // reset color
+    doc.setTextColor(0, 0, 0);
+}
+
+
+    }
+
+    // Footer
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.3);
+    doc.line(margin, pageH - footerHeight, pageW - margin, pageH - footerHeight);
+
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.setFont(undefined, 'normal');
+    doc.text(footerLeftText, margin, pageH - footerHeight + 5);
+
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    const rightTextWidth = doc.getTextWidth(footerRightText);
+    doc.text(footerRightText, pageW - margin - rightTextWidth, pageH - footerHeight + 5);
+  }
+
+  doc.save("catalogo_9porhoja.pdf");
+}
+
+
+    // helper: add dataURL image to doc scaled with aspect ratio, respecting maxW/maxH
+    async function addImageToDoc(doc, dataUrl, x, y, maxW, maxH){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const iw = img.naturalWidth;
+          const ih = img.naturalHeight;
+          const ratio = Math.min(maxW / iw, maxH / ih);
+          const w = iw * ratio;
+          const h = ih * ratio;
+          // center image in available area horizontally
+          const px = x + (maxW - w) / 2;
+          const py = y + (maxH - h) / 2;
+          try{
+            // jsPDF can accept dataUrl directly
+            doc.addImage(dataUrl, 'JPEG', px, py, w, h);
+            resolve();
+          }catch(err){
+            reject(err);
+          }
+        };
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+    }
+
+    // ---------- utils ----------
+    function readFileAsDataURL(file){ return new Promise((res, rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file); }); }
+    function pickSingleFile(){ return new Promise((res)=>{ const input=document.createElement('input'); input.type='file'; input.accept='image/*'; input.onchange=(e)=>res(e.target.files?.[0]); input.click(); }); }
+    function downloadUrl(url, filename){ const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); }
+
+    function formatCurrency(val){
+      const n = Number(val) || 0;
+      return n.toLocaleString('es-AR', { style:'currency', currency:'ARS', minimumFractionDigits:2 });
+    }
+
+  // ... todo tu código de funciones y listeners acá arriba ...
+
+// Listeners para inputs de footer y fondo
+document.getElementById('footerLeftInput').addEventListener('input', e => {
+  footerLeftText = e.target.value;
+});
+document.getElementById('footerRightInput').addEventListener('input', e => {
+  footerRightText = e.target.value;
+});
+document.getElementById('bgColorInput').addEventListener('input', e => {
+  const vals = e.target.value.split(',').map(v => parseFloat(v.trim()));
+  if (vals.length === 4 && vals.every(n => !isNaN(n))) {
+    backgroundColor = vals;
+  }
+});
+backgroundImageInput.addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const dataUrl = await readFileAsDataURL(file);
+  backgroundImage = await applyOpacityToImage(dataUrl, 0.3);
+  setStatus('Imagen de fondo cargada y procesada');
+});
+async function applyOpacityToImage(dataUrl, opacity) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // para evitar problemas CORS
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = opacity;
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+// ---------- init ----------
+render();
+
+  </script>
+</body>
+</html>

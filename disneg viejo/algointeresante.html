@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Disneg — Distribuidoras</title>
+  <style>
+    :root{--accent:#0ea5a4;--bg:#f7fafc;--card:#ffffff}
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0;background:var(--bg);color:#0f172a}
+    header{background:linear-gradient(90deg, #06b6d4, #0891b2);color:white;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-weight:700;letter-spacing:0.6px}
+    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:10px}
+    nav a{color:white;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
+    nav a:hover{background:rgba(255,255,255,0.12)}
+    main{max-width:1100px;margin:24px auto;padding:0 16px}
+    .hero{display:flex;gap:18px;align-items:center}
+    .hero h1{margin:0;font-size:24px}
+    .controls{margin-left:auto;display:flex;gap:8px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+    .card h3{margin:0 0 8px 0}
+    .meta{font-size:13px;color:#475569;margin-bottom:10px}
+    .actions{display:flex;gap:8px}
+    button{background:var(--accent);border:none;color:white;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;color:#064e4f;border:1px solid rgba(6,78,79,0.08)}
+    .small{padding:6px 8px;font-size:14px}
+    form{display:flex;flex-direction:column;gap:8px}
+    input,textarea,select{padding:8px;border-radius:8px;border:1px solid #e6eef0}
+    footer{padding:18px;text-align:center;color:#475569}
+
+    /* Contact & help columns */
+    .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+    @media(max-width:700px){.cols{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header id="disneg">
+    <div class="brand">disneg</div>
+    <nav>
+      <ul>
+        <li><a href="#productos">Producto</a></li>
+        <li><a href="#pdf">PDF</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#ayuda">Ayuda</a></li>
+      </ul>
+    </nav>
+    <div class="controls">
+      <button id="exportPdf" title="Exportar lista como PDF" class="small">Exportar PDF</button>
+      <button id="addSupplier" class="small ghost">Agregar proveedor</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Distribuidoras principales</h1>
+        <p class="meta">Administra tus 3 principales proveedores y la lista de productos asociada. Puedes editar, borrar o imprimir la lista en PDF.</p>
+      </div>
+    </section>
+
+    <section id="productos">
+      <div class="grid" id="suppliersGrid">
+        <!-- Cards generadas por JS -->
+      </div>
+    </section>
+
+    <section id="pdf" style="margin-top:18px">
+      <div class="card">
+        <h3>Generar PDF</h3>
+        <p class="meta">Al presionar "Exportar PDF" se abrirá una vista imprimible con la lista de proveedores y sus productos. Desde ahí puedes "Guardar como PDF" en la mayoría de navegadores.</p>
+        <div class="actions">
+          <button id="exportPdf2">Abrir vista imprimible</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="cols">
+      <section id="contacto" class="card">
+        <h3>Contacto</h3>
+        <p class="meta">Escribe tus datos de contacto para mostrarlos en la ficha pública.</p>
+        <form id="contactForm">
+          <input id="contactName" placeholder="Nombre / Empresa" />
+          <input id="contactEmail" placeholder="Email" />
+          <input id="contactPhone" placeholder="Teléfono" />
+          <button type="button" id="saveContact" class="small">Guardar contacto</button>
+        </form>
+        <div id="contactPreview" style="margin-top:10px;color:#334155;font-size:14px"></div>
+      </section>
+
+      <section id="ayuda" class="card">
+        <h3>Ayuda</h3>
+        <p class="meta">Instrucciones rápidas:</p>
+        <ul>
+          <li>Usa "Agregar proveedor" para añadir más proveedores.</li>
+          <li>Cada proveedor tiene su lista de productos — haz clic en "Imprimir" o "Exportar PDF" para generar un PDF.</li>
+          <li>Los cambios se guardan en el navegador (localStorage).</li>
+        </ul>
+      </section>
+    </div>
+
+  </main>
+
+  <footer>
+    Disneg · Panel simple de proveedores — creado con HTML y JS
+  </footer>
+
+  <script>
+    // Datos por defecto: 3 proveedores principales
+    const DEFAULT_SUPPLIERS = [
+      {id: genId(), name: 'Distribuidora Alfa', phone: '+54 261 000-0001', email: 'alfadistrib@example.com', products: ['Coca-Cola 2L', 'Aceite 1L', 'Arroz 1kg']},
+      {id: genId(), name: 'Comercial Beta', phone: '+54 261 000-0002', email: 'beta@example.com', products: ['Harina 1kg', 'Fideos 500g']},
+      {id: genId(), name: 'Mayorista Gamma', phone: '+54 261 000-0003', email: 'gamma@example.com', products: ['Azúcar 1kg', 'Leche 1L', 'Yerba 1kg']}
+    ];
+
+    function genId(){return 'id_'+Math.random().toString(36).slice(2,9)}
+
+    // Carga y guarda en localStorage
+    function loadSuppliers(){
+      const raw = localStorage.getItem('disneg_suppliers');
+      if(!raw) return DEFAULT_SUPPLIERS.slice();
+      try{return JSON.parse(raw)}catch(e){return DEFAULT_SUPPLIERS.slice()}
+    }
+    function saveSuppliers(list){localStorage.setItem('disneg_suppliers', JSON.stringify(list));}
+
+    let suppliers = loadSuppliers();
+
+    // Render
+    const grid = document.getElementById('suppliersGrid');
+    function render(){
+      grid.innerHTML='';
+      suppliers.forEach(s=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <h3 contenteditable='false' data-role='name'>${escapeHtml(s.name)}</h3>
+          <div class='meta'><strong>Tel:</strong> <span data-role='phone'>${escapeHtml(s.phone)}</span> · <strong>Email:</strong> <span data-role='email'>${escapeHtml(s.email)}</span></div>
+          <div><strong>Productos:</strong>
+            <ul data-role='products'>${s.products.map(p=>`<li>${escapeHtml(p)}</li>`).join('')}</ul>
+          </div>
+          <div style='margin-top:10px' class='actions'>
+            <button class='small' data-action='edit' data-id='${s.id}'>Editar</button>
+            <button class='small ghost' data-action='print' data-id='${s.id}'>Imprimir</button>
+            <button class='small ghost' data-action='delete' data-id='${s.id}'>Eliminar</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Escape simple HTML
+    function escapeHtml(str){return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+
+    render();
+
+    // Event delegation
+    grid.addEventListener('click', e=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      const action = btn.dataset.action; const id = btn.dataset.id;
+      if(action==='delete'){ if(confirm('Eliminar proveedor?')){ suppliers = suppliers.filter(x=>x.id!==id); saveSuppliers(suppliers); render(); }}
+      if(action==='print'){ const sup = suppliers.find(x=>x.id===id); openPrintable(sup); }
+      if(action==='edit'){ openEditModal(id); }
+    });
+
+    // Add supplier
+    document.getElementById('addSupplier').addEventListener('click', ()=>{
+      const newS = {id:genId(), name:'Nuevo proveedor', phone:'', email:'', products:[]};
+      suppliers.unshift(newS); saveSuppliers(suppliers); render();
+      // abrir edición en el primero
+      openEditModal(newS.id);
+    });
+
+    // Simple edit modal using prompt (lightweight)
+    function openEditModal(id){
+      const s = suppliers.find(x=>x.id===id); if(!s) return;
+      const name = prompt('Nombre del proveedor', s.name); if(name===null) return;
+      const phone = prompt('Teléfono', s.phone ?? ''); if(phone===null) return;
+      const email = prompt('Email', s.email ?? ''); if(email===null) return;
+      const productsText = prompt('Productos (separados por coma)', s.products.join(', ')); if(productsText===null) return;
+      s.name = name.trim() || s.name; s.phone = phone.trim(); s.email = email.trim();
+      s.products = productsText.split(',').map(p=>p.trim()).filter(Boolean);
+      saveSuppliers(suppliers); render();
+    }
+
+    // Contacto save
+    document.getElementById('saveContact').addEventListener('click', ()=>{
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const phone = document.getElementById('contactPhone').value;
+      const contact = {name,email,phone};
+      localStorage.setItem('disneg_contact', JSON.stringify(contact));
+      previewContact(contact);
+      alert('Contacto guardado en el navegador');
+    });
+    function previewContact(c){
+      const p = document.getElementById('contactPreview');
+      if(!c) p.innerHTML='Sin datos guardados'; else p.innerHTML = `<strong>${escapeHtml(c.name)}</strong><div>${escapeHtml(c.email)} · ${escapeHtml(c.phone)}</div>`;
+    }
+    const savedContact = localStorage.getItem('disneg_contact'); if(savedContact) previewContact(JSON.parse(savedContact));
+
+    // Export / open printable view
+    function openPrintable(single){
+      let html = `
+        <html><head><title>Listado proveedores</title>
+        <meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+        <style>body{font-family:Arial,Helvetica,sans-serif;padding:18px;color:#0b1220}h1{font-size:20px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:8px}th{background:#f2f2f2}</style>
+        </head><body>`;
+      if(single){
+        html += `<h1>${escapeHtml(single.name)}</h1><p>${escapeHtml(single.phone)} · ${escapeHtml(single.email)}</p><h3>Productos</h3><ul>`+ single.products.map(p=>`<li>${escapeHtml(p)}</li>`).join('') +'</ul>';
+      } else {
+        html += '<h1>Proveedores — Disneg</h1><table><thead><tr><th>Proveedor</th><th>Contacto</th><th>Productos</th></tr></thead><tbody>';
+        suppliers.forEach(s=>{
+          html += `<tr><td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.phone)}<br>${escapeHtml(s.email)}</td><td>${escapeHtml(s.products.join(', '))}</td></tr>`;
+        });
+        html += '</tbody></table>';
+      }
+      html += `<p style="margin-top:18px;font-size:12px;color:#6b7280">Generado desde Disneg — ${new Date().toLocaleString()}</p>`;
+      html += '</body></html>';
+
+      const w = window.open('','_blank');
+      w.document.write(html);
+      w.document.close();
+      // Dejar al usuario imprimir/guardar como PDF
+    }
+
+    document.getElementById('exportPdf').addEventListener('click', ()=>openPrintable());
+    document.getElementById('exportPdf2').addEventListener('click', ()=>openPrintable());
+
+    // initial render already called
+  </script>
+</body>
+</html>
