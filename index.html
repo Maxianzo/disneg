@@ -152,6 +152,13 @@
                         <a class="btn btn-success w-100 mb-2" href="distrolac/Lista-especial.pdf" download>
                             Descargar Lista PDF
                         </a>
+                      <a class="btn btn-warning w-100 mb-2"
+   data-bs-toggle="modal"
+   data-bs-target="#pdfViewDistrolac">
+   Ver online
+</a>
+
+
                         <a  style="background-color: #7d1515 !important; border-color: #7d1515 !important;  " class="btn btn-success w-100 mb-2"
                         href="#"
                         onclick="window.open('https://drive.google.com/drive/folders/1HHx60FYf2c8iAIJkU9kztJAdMjmVL6Ok', '_blank'); return false;">
@@ -180,6 +187,11 @@
                         <a class="btn btn-success w-100 mb-2" href="can service/pdf-20-11-2025.pdf" download>
                             Descargar Lista PDF
                         </a>
+                            <a class="btn btn-warning w-100 mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#pdfViewCanServi">
+                            Ver online
+                            </a>
 
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCanServi">
                             Más información
@@ -455,6 +467,44 @@
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal Ver PDF Distrolac -->
+<div class="modal fade" id="pdfViewDistrolac">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Lista PDF — Distrolac</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height: 80vh;">
+                <iframe src="distrolac/Lista-especial.pdf"
+                        style="width: 100%; height: 100%; border: none;">
+                </iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal Ver PDF Can Servi -->
+<div class="modal fade" id="pdfViewCanServi">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Lista PDF — Can Servi</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height: 80vh;">
+                <iframe src="can service/pdf-20-11-2025.pdf"
+                        style="width: 100%; height: 100%; border: none;">
+                </iframe>
             </div>
 
         </div>
