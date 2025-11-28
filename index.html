@@ -133,6 +133,9 @@
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDistrolac">
                             Más información
                         </button>
+                        <button style="margin-top: 6px;"  class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#ofertaDistrolac">
+                        ¡Oferta Especial!
+                    </button>
                     </div>
                 </div>
             </div>
@@ -169,7 +172,141 @@
 
         </div>
     </section>
+<div class="modal fade" id="modalDistrolac">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
+            <div class="modal-header">
+                <h5 class="modal-title">Información — Distrolac</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-2"><strong>¿Qué vendemos?</strong></p>
+                <ul>
+                    <li>Fiambres (piezas, medias piezas)</li>
+                    <li>Quesos</li>
+                    <li>Productos de despensa y refrigerados</li>
+                    <li>Lácteos</li>
+                    <li>Salsas y quesos rallados (La Quesera, Ilolay)</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Formas de pago</strong></p>
+                <p>
+                    Se paga al momento de la entrega, en efectivo o Mercado Pago.  
+                    No hace falta pagar antes. Revisás la mercadería y si algo no está bien,
+                    podés rechazar solo esa parte.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Días de entrega</strong></p>
+                <p>
+                    Entregamos de <strong>lunes a sábado</strong> en:  
+                    <strong>Guaymallén, Godoy Cruz, Luján, Las Heras, Ciudad</strong>.
+                </p>
+                <p>
+                    Zonas más alejadas (<em>Corralito, Rodeo del Medio, Club de Piedra, etc.</em>):  
+                    <strong>Lunes, miércoles y sábados.</strong>
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Cómo hacer tu pedido</strong></p>
+                <p>
+                    Podés escribir en cualquier momento.  
+                    Los camiones salen a las <strong>8:00 AM</strong>.  
+                    Hasta las <strong>8:30 AM</strong> puedo cargar tu pedido para que salga el mismo día.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Mínimo de compra</strong></p>
+                <p>
+                    Mínimo de <strong>$49.000</strong>.  
+                    Si no llegás, podés retirar en depósito.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Cómo se vende cada producto</strong></p>
+                <ul>
+                    <li><strong>Fiambres:</strong> piezas o medias piezas (de 3 kg o más).</li>
+                    <li><strong>Excepciones:</strong> sardo, azul y rellenito → media pieza aunque pesen menos.</li>
+                    <li><strong>Salchichón primavera, salamines:</strong> siempre por pieza.</li>
+                    <li><strong>Resto de productos:</strong> por unidad.</li>
+                    <li><strong>Salsas y quesos rallados:</strong> caja o pack.</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Devoluciones y cambios</strong></p>
+                <ul>
+                    <li>Yogures Ilolay → se cambian si se vencen.</li>
+                    <li>Resto de productos → solo si están en mal estado antes del vencimiento.</li>
+                </ul>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Can Servi -->
+<div class="modal fade" id="modalCanServi">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Información — Can Servi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-2"><strong>¿Qué vendemos?</strong></p>
+                <ul>
+                    <li>Alimentos para perros y gatos</li>
+                    <li>Pipetas y productos antipulgas</li>
+                    <li>Arena sanitaria</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Mínimo de compra</strong></p>
+                <p>No hay mínimo. Podés pedir lo que necesites.</p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Días de entrega por zona</strong></p>
+                <ul>
+                    <li><strong>Lunes:</strong> Luján</li>
+                    <li><strong>Martes:</strong> Valle de Uco</li>
+                    <li><strong>Miércoles:</strong> Las Heras y Ciudad</li>
+                    <li><strong>Jueves:</strong> Maipú y Zona Este</li>
+                    <li><strong>Viernes:</strong> Guaymallén y Godoy Cruz</li>
+                </ul>
+
+                <p>
+                    Podés hacer tu pedido cuando quieras — se programa para el día de reparto de tu zona.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
     <!-- MODAL VISOR PDF DISTROLAC -->
     <div class="modal fade" id="pdfViewDistrolac">
@@ -212,7 +349,57 @@
             </div>
         </div>
     </div>
+<!-- ofertas  --> 
 
+<div class="modal fade" id="ofertaDistrolac" tabindex="-1" aria-labelledby="OfertaDistrolacLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="OfertaDistrolacLabel"><i class="fas fa-tags"></i> OFERTA ESPECIAL - DISTROLAC</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img style="width: 65%; margin-left: 20%;" src="./distrolac/img/barra-destino.jpg" alt="">
+                <h3>SUPER OFERTA!😉
+<br><br>
+
+* _• Queso barra El Destino x kg :</h3>
+              
+                <hr>
+                <p><strong>Precio de la Oferta:</strong></p>
+                <ul>
+                    <li> $6897</li>
+                    <li> Opción de compra por caja cerrada: 2% de descuento</li>
+                     <li>(Oferta válida hasta agotar stock. Producto con vencimiento al 05/02)</li>
+                </ul>
+                 <a href="https://wa.me/2612708252?text=Buen dia, quiero la oferta de barra El Destino " style="    display: flex;    justify-content: center;"   class="btn btn-success mt-3">¡Quiero esta oferta!</a>
+            </div>
+
+            
+
+
+
+
+
+   <div class="modal-body">
+                <img style="width: 65%; margin-left: 20%;" src="./distrolac/img/cremoso-sin-lactosa.jpg" alt="">
+                <h3>SUPER OFERTA!😉
+
+<br><br>
+* _• Queso cremoso sin lactosa Lombarde x kg :</h3>
+              
+                <hr>
+                <p><strong>Precio de la Oferta:</strong></p>
+                <ul>
+                    <li> $3869</li>
+                    <li> Peso de la horma: 2kg aprox</li>
+                     <li>(oferta válida únicamente Hasta agotar stock. Producto con vencimiento al 28/11)</li>
+                </ul>
+                 <a href="https://wa.me/2612708252?text=Buen dia, quiero la oferta de Queso cremoso sin lactosa Lombarde " style="    display: flex;    justify-content: center;"   class="btn btn-success mt-3">¡Quiero esta oferta!</a>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Scripts -->
     <script src="assets/js/jquery-1.11.0.min.js"></script>
