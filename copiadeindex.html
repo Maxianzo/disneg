@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisNeg</title>
+    
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+
+    <style>
+        body { background-color: #f5f5f5; }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(to bottom right, #e8f3ff, #ffffff);
+            text-align: center;
+        }
+
+        .hero h1 { font-size: 42px; font-weight: bold; }
+        .hero p { font-size: 18px; color: #333; }
+
+        /* ------------------- PDF CARDS ------------------- */
+        .pdf-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+            background: white;
+            margin-bottom: 25px;
+        }
+
+        .img-box {
+            width: 100%;
+            height: 180px;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .pdf-body { padding: 15px; }
+        .pdf-title { font-size: 20px; font-weight: bold; }
+        .pdf-desc { font-size: 14px; color: #444; }
+
+        footer {
+            padding: 30px 0;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+    </style>
+       <style>
+        .pdf-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+            background: white;
+            margin-bottom: 25px;
+        }
+
+     .pdf-card .img-box {
+    width: 100%;
+    height: 180px;            /* todas mismas altura */
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;  /* centrar horizontal */
+    align-items: center;      /* centrar vertical */
+    overflow: hidden;         /* evita deformaciones */
+}
+
+.pdf-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;      /* 🔥 siempre se ve completa */
+}
+
+
+
+        .pdf-body { padding: 15px; }
+        .pdf-title { font-size: 20px; font-weight: bold; }
+        .pdf-desc { font-size: 14px; color: #444; }
+    </style>
+</head>
+
+<body>
+
+
+  <!-- NAVBAR -->
+    <header class="py-3">
+        <nav class="container navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand fs-3 fw-bold" href="index.html">DisNeg</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pdf.html">PDF</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ayuda.html">Ayuda</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+     <section class="hero">
+        <div class="container">
+            <h1>Bienvenido a Disneg</h1>
+            <h3>Plataforma que conecta distribuidoras con comercios – Tu Preventista Digital</h3>
+            <p>Conectamos distribuidoras confiables con tu negocio. Hacé tu pedido online como con un preventista digital: vos cargás el pedido y la distribuidora se encarga del envío directo.</p>
+        </div>
+    </section>
+    <!-- ⭐ PDF SECTION -->
+      <!-- ⭐ SECCIÓN PDF -->
+    <section class="container py-5" id="section-pdf">
+
+        <h2 class="text-center mb-4">Listas de precios por distribuidora</h2>
+
+        <div class="row g-3">
+
+            <!-- 🥇 DISTROLAC -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pdf-card">
+                   <div class="img-box">
+                        <img src="./assets/img/distrolac.PNG" alt="Distrolac">
+                    </div>
+                    <div class="pdf-body">
+                        <div class="pdf-title">Distrolac</div>
+                        <p class="pdf-desc">
+                            Fiambres, lácteos, quesos y despensa. Reparto diario en varias zonas.
+                        </p>
+
+                        <a class="btn btn-success w-100 mb-2" href="distrolac/Lista-especial.pdf" download>
+                            Descargar Lista PDF
+                        </a>
+                        <a class="btn btn-warning w-100 mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#pdfViewCanServi">
+                                Ver online
+                        </a>
+
+                        <a  style="background-color: #7d1515 !important; border-color: #7d1515 !important;  " class="btn btn-success w-100 mb-2"
+                        href="#"
+                        onclick="window.open('https://drive.google.com/drive/folders/1HHx60FYf2c8iAIJkU9kztJAdMjmVL6Ok', '_blank'); return false;">
+                            Drive directo
+                        </a>
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDistrolac">
+                            Más información
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🥈 CAN SERVI -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pdf-card">
+                    <div class="img-box">
+    <img src="./assets/img/canservi.PNG" alt="Can Servi">
+</div>
+
+                    <div class="pdf-body">
+                        <div class="pdf-title">Can Servi</div>
+                     <p class="pdf-desc">
+    Alimentos para perros y gatos, pipetas y arena sanitaria.
+</p>
+
+                        <a class="btn btn-success w-100 mb-2" href="can service/pdf-20-11-2025.pdf" download>
+                            Descargar Lista PDF
+                        </a>
+                            <a class="btn btn-warning w-100 mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#pdfViewCanServi">
+                            Ver online
+                            </a>
+
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCanServi">
+                            Más información
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+ <!-- OFERTAS -->
+
+      <section class="hero">
+        <div class="container">
+         <h1>Ofertas Destacadas</h1>
+<h5>Aprovechá los precios especiales de esta semana</h5>
+
+        
+    </section>
+
+
+<div class="row g-3">
+
+<!-- 🥇 DISTROLAC -->
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="pdf-card">
+                   <div class="img-box">
+                        <img src="./distrolac/img/cremoso-sin-lactosa.jpg" alt="Distrolac">
+                    </div>
+                    <div class="pdf-body">
+                        <div class="pdf-title">Distrolac</div>
+                        <h1>   SUPER OFERTA!😉</h1>
+                        <p class="pdf-desc">
+                         
+
+* _• Queso cremoso sin lactosa Lombarde x kg :<br><br> <b>$3869</b>  . <br> <br>
+* ⁠Peso de la horma: 2kg aprox
+
+                        </p>
+<p>(oferta válida únicamente Hasta agotar stock. Producto con vencimiento al 28/11)</p>
+                    
+                        
+                    </div>
+                </div>
+            </div>
+
+   <div class="col-6 col-md-4 col-lg-3">
+                <div class="pdf-card">
+                   <div class="img-box">
+                        <img src="./distrolac/img/barra-destino.jpg" alt="Distrolac">
+                    </div>
+                    <div class="pdf-body">
+                        <div class="pdf-title">Distrolac</div>
+                        <h1>   SUPER OFERTA!😉</h1>
+                        <p class="pdf-desc">
+                         
+
+
+
+
+* _• Queso barra El Destino x kg : <br><br> <b>$6897</b> .
+
+
+                        </p>
+<p>(Oferta válida hasta agotar stock. Producto con vencimiento al 05/02)</p>
+                    
+                        
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+    <!-- MODALS -->
+    <!-- Modal Alfa -->
+    <div class="modal fade" id="modalAlfa">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Información — Distribuidora Alfa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Productos de limpieza y descartables. Envíos en todo Mendoza.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Beta -->
+    <div class="modal fade" id="modalBeta">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Información — Distribuidora Beta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Distribución mayorista de bebidas y golosinas. Reparto por zonas.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery-1.11.0.min.js"></script>
+    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- WhatsApp -->
+    <div class="container-boton">
+        <a href="https://wa.me/2612708252?text=Buen dia,quiero hacer un pedido/consulta " target="_blank">
+            <img class="boton" src="./assets/img/icono.jpg" alt="">
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>DisNeg  © 2025 - Todos los derechos reservados</p>
+    </footer>
+    
+   <!-- Modal Distrolac -->
+<div class="modal fade" id="modalDistrolac">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Información — Distrolac</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-2"><strong>¿Qué vendemos?</strong></p>
+                <ul>
+                    <li>Fiambres (piezas, medias piezas)</li>
+                    <li>Quesos</li>
+                    <li>Productos de despensa y refrigerados</li>
+                    <li>Lácteos</li>
+                    <li>Salsas y quesos rallados (La Quesera, Ilolay)</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Formas de pago</strong></p>
+                <p>
+                    Se paga al momento de la entrega, en efectivo o Mercado Pago.  
+                    No hace falta pagar antes. Revisás la mercadería y si algo no está bien,
+                    podés rechazar solo esa parte.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Días de entrega</strong></p>
+                <p>
+                    Entregamos de <strong>lunes a sábado</strong> en:  
+                    <strong>Guaymallén, Godoy Cruz, Luján, Las Heras, Ciudad</strong>.
+                </p>
+                <p>
+                    Zonas más alejadas (<em>Corralito, Rodeo del Medio, Club de Piedra, etc.</em>):  
+                    <strong>Lunes, miércoles y sábados.</strong>
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Cómo hacer tu pedido</strong></p>
+                <p>
+                    Podés escribir en cualquier momento.  
+                    Los camiones salen a las <strong>8:00 AM</strong>.  
+                    Hasta las <strong>8:30 AM</strong> puedo cargar tu pedido para que salga el mismo día.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Mínimo de compra</strong></p>
+                <p>
+                    Mínimo de <strong>$49.000</strong>.  
+                    Si no llegás, podés retirar en depósito.
+                </p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Cómo se vende cada producto</strong></p>
+                <ul>
+                    <li><strong>Fiambres:</strong> piezas o medias piezas (de 3 kg o más).</li>
+                    <li><strong>Excepciones:</strong> sardo, azul y rellenito → media pieza aunque pesen menos.</li>
+                    <li><strong>Salchichón primavera, salamines:</strong> siempre por pieza.</li>
+                    <li><strong>Resto de productos:</strong> por unidad.</li>
+                    <li><strong>Salsas y quesos rallados:</strong> caja o pack.</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Devoluciones y cambios</strong></p>
+                <ul>
+                    <li>Yogures Ilolay → se cambian si se vencen.</li>
+                    <li>Resto de productos → solo si están en mal estado antes del vencimiento.</li>
+                </ul>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Can Servi -->
+<div class="modal fade" id="modalCanServi">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Información — Can Servi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-2"><strong>¿Qué vendemos?</strong></p>
+                <ul>
+                    <li>Alimentos para perros y gatos</li>
+                    <li>Pipetas y productos antipulgas</li>
+                    <li>Arena sanitaria</li>
+                </ul>
+
+                <hr>
+
+                <p class="mb-2"><strong>Mínimo de compra</strong></p>
+                <p>No hay mínimo. Podés pedir lo que necesites.</p>
+
+                <hr>
+
+                <p class="mb-2"><strong>Días de entrega por zona</strong></p>
+                <ul>
+                    <li><strong>Lunes:</strong> Luján</li>
+                    <li><strong>Martes:</strong> Valle de Uco</li>
+                    <li><strong>Miércoles:</strong> Las Heras y Ciudad</li>
+                    <li><strong>Jueves:</strong> Maipú y Zona Este</li>
+                    <li><strong>Viernes:</strong> Guaymallén y Godoy Cruz</li>
+                </ul>
+
+                <p>
+                    Podés hacer tu pedido cuando quieras — se programa para el día de reparto de tu zona.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal Ver PDF Distrolac -->
+<!-- Modal Ver PDF Distrolac -->
+    <div class="modal fade" id="pdfViewDistrolac">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Lista PDF — Distrolac</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" style="height: 80vh;">
+                    <iframe src="https://docs.google.com/gview?embedded=true&url=https://maxianzo.github.io/disneg/distrolac/Lista-especial.pdf"
+
+                            style="width: 100%; height: 100%; border: none;">
+                    </iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<!-- Modal Ver PDF Can Servi -->
+<div class="modal fade" id="pdfViewCanServi">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Lista PDF — Can Servi</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="height: 80vh;">
+                <iframe src="can service/pdf-20-11-2025.pdf"
+                        style="width: 100%; height: 100%; border: none;">
+                </iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

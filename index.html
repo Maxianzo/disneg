@@ -29,7 +29,6 @@
         .hero h1 { font-size: 42px; font-weight: bold; }
         .hero p { font-size: 18px; color: #333; }
 
-        /* ------------------- PDF CARDS ------------------- */
         .pdf-card {
             border-radius: 12px;
             overflow: hidden;
@@ -65,37 +64,6 @@
             text-align: center;
         }
     </style>
-       <style>
-        .pdf-card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
-            background: white;
-            margin-bottom: 25px;
-        }
-
-     .pdf-card .img-box {
-    width: 100%;
-    height: 180px;            /* todas mismas altura */
-    background: #f5f5f5;
-    display: flex;
-    justify-content: center;  /* centrar horizontal */
-    align-items: center;      /* centrar vertical */
-    overflow: hidden;         /* evita deformaciones */
-}
-
-.pdf-card img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;      /* 🔥 siempre se ve completa */
-}
-
-
-
-        .pdf-body { padding: 15px; }
-        .pdf-title { font-size: 20px; font-weight: bold; }
-        .pdf-desc { font-size: 14px; color: #444; }
-    </style>
 </head>
 
 <body>
@@ -112,7 +80,7 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#section-pdf">PDF</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pdf.html">PDF</a></li>
                     <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
                     <li class="nav-item"><a class="nav-link" href="ayuda.html">Ayuda</a></li>
                 </ul>
@@ -125,11 +93,11 @@
         <div class="container">
             <h1>Bienvenido a Disneg</h1>
             <h3>Plataforma que conecta distribuidoras con comercios – Tu Preventista Digital</h3>
-            <p>Conectamos distribuidoras confiables con tu negocio. Hacé tu pedido online como con un preventista digital: vos cargás el pedido y la distribuidora se encarga del envío directo.</p>
+            <p>Conectamos distribuidoras confiables con tu negocio. Hacé tu pedido online.</p>
         </div>
     </section>
-    <!-- ⭐ PDF SECTION -->
-      <!-- ⭐ SECCIÓN PDF -->
+
+    <!-- ⭐ SECCIÓN PDF -->
     <section class="container py-5" id="section-pdf">
 
         <h2 class="text-center mb-4">Listas de precios por distribuidora</h2>
@@ -140,21 +108,34 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="pdf-card">
                    <div class="img-box">
-    <img src="./assets/img/distrolac.PNG" alt="Distrolac">
-</div>
+                        <img src="./assets/img/distrolac.PNG" alt="Distrolac">
+                    </div>
                     <div class="pdf-body">
                         <div class="pdf-title">Distrolac</div>
                         <p class="pdf-desc">
-    Fiambres, lácteos, quesos y despensa. Reparto diario en varias zonas.
-</p>
+                            Fiambres, lácteos y despensa.
+                        </p>
 
-                        <a class="btn btn-success w-100 mb-2" href="Distrolac.pdf" download>
+                        <a class="btn btn-success w-100 mb-2" href="distrolac/Lista-especial.pdf" download>
                             Descargar Lista PDF
                         </a>
 
+                        <a class="btn btn-warning w-100 mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#pdfViewDistrolac">
+                                Ver online
+                        </a>
+ <a  style="background-color: #7d1515 !important; border-color: #7d1515 !important;  " class="btn btn-success w-100 mb-2"
+                        href="#"
+                        onclick="window.open('https://drive.google.com/drive/folders/1HHx60FYf2c8iAIJkU9kztJAdMjmVL6Ok', '_blank'); return false;">
+                            Drive directo
+                        </a>
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDistrolac">
                             Más información
                         </button>
+                        <button style="margin-top: 6px;"  class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#ofertaDistrolac">
+                        ¡Oferta Especial!
+                    </button>
                     </div>
                 </div>
             </div>
@@ -163,17 +144,23 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="pdf-card">
                     <div class="img-box">
-    <img src="./assets/img/canservi.PNG" alt="Can Servi">
-</div>
+                        <img src="./assets/img/canservi.PNG" alt="Can Servi">
+                    </div>
 
                     <div class="pdf-body">
                         <div class="pdf-title">Can Servi</div>
-                     <p class="pdf-desc">
-    Alimentos para perros y gatos, pipetas y arena sanitaria.
-</p>
+                        <p class="pdf-desc">
+                            Alimentos para mascotas.
+                        </p>
 
-                        <a class="btn btn-success w-100 mb-2" href="CanServi.pdf" download>
+                        <a class="btn btn-success w-100 mb-2" href="can service/pdf-20-11-2025.pdf" download>
                             Descargar Lista PDF
+                        </a>
+
+                        <a class="btn btn-warning w-100 mb-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#pdfViewCanServi">
+                            Ver online
                         </a>
 
                         <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCanServi">
@@ -185,69 +172,6 @@
 
         </div>
     </section>
-    <!-- MODALS -->
-    <!-- Modal Alfa -->
-    <div class="modal fade" id="modalAlfa">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Información — Distribuidora Alfa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <p>Productos de limpieza y descartables. Envíos en todo Mendoza.</p>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Beta -->
-    <div class="modal fade" id="modalBeta">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Información — Distribuidora Beta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    <p>Distribución mayorista de bebidas y golosinas. Reparto por zonas.</p>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="assets/js/jquery-1.11.0.min.js"></script>
-    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-
-    <!-- WhatsApp -->
-    <div class="container-boton">
-        <a href="https://wa.me/2612708252?text=Buen dia,quiero hacer un pedido " target="_blank">
-            <img class="boton" src="./assets/img/icono.jpg" alt="">
-        </a>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>DisNeg  © 2025 - Todos los derechos reservados</p>
-    </footer>
-    
-   <!-- Modal Distrolac -->
 <div class="modal fade" id="modalDistrolac">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -383,6 +307,121 @@
         </div>
     </div>
 </div>
+
+    <!-- MODAL VISOR PDF DISTROLAC -->
+    <div class="modal fade" id="pdfViewDistrolac">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Lista PDF — Distrolac</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" style="height: 80vh;">
+                    <iframe
+                        style="width: 100%; height: 100%; border: none;"
+                        src="https://docs.google.com/gview?embedded=true&url=https://maxianzo.github.io/disneg/distrolac/Lista-especial.pdf">
+                    </iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VISOR PDF CAN SERVI -->
+    <div class="modal fade" id="pdfViewCanServi">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Lista PDF — Can Servi</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" style="height: 80vh;">
+                    <iframe
+                        style="width: 100%; height: 100%; border: none;"
+                        src="https://docs.google.com/gview?embedded=true&url=https://maxianzo.github.io/disneg/can%20service/pdf-20-11-2025.pdf">
+                    </iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!-- ofertas  --> 
+
+<div class="modal fade" id="ofertaDistrolac" tabindex="-1" aria-labelledby="OfertaDistrolacLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="OfertaDistrolacLabel"><i class="fas fa-tags"></i> OFERTA ESPECIAL - DISTROLAC</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <img style="width: 65%; margin-left: 20%;" src="./distrolac/img/cremoso-pioner.jpg" alt="">
+                <h3>SUPER OFERTA!😉
+
+                    <br><br>
+                    * _• *Queso cremoso Pionero x kg* :</h3>
+              
+                <hr>
+                <p><strong>Precio de la Oferta:</strong></p>
+                <ul>
+                    <li> $4599</li>
+                
+                     <li>(*oferta válida únicamente Hasta agotar stock. Producto con vencimiento al 28/12*)</li>
+                </ul>
+                 <a href="https://wa.me/2612708252?text=Buen dia, quiero la oferta de Queso cremoso Queso cremoso Pionero " style="    display: flex;    justify-content: center;"   class="btn btn-success mt-3">¡Quiero esta oferta!</a>
+            </div>
+
+            
+
+
+
+<!-- ofertas  
+
+   <div class="modal-body">
+                <img style="width: 65%; margin-left: 20%;" src="./distrolac/img/cremoso-sin-lactosa.jpg" alt="">
+                <h3>SUPER OFERTA!😉
+
+<br><br>
+* _• Queso cremoso sin lactosa Lombarde x kg :</h3>
+              
+                <hr>
+                <p><strong>Precio de la Oferta:</strong></p>
+                <ul>
+                    <li> $3869</li>
+                    <li> Peso de la horma: 2kg aprox</li>
+                     <li>(oferta válida únicamente Hasta agotar stock. Producto con vencimiento al 28/11)</li>
+                </ul>
+                 <a href="https://wa.me/2612708252?text=Buen dia, quiero la oferta de Queso cremoso sin lactosa Lombarde " style="    display: flex;    justify-content: center;"   class="btn btn-success mt-3">¡Quiero esta oferta!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+--> 
+
+   
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery-1.11.0.min.js"></script>
+    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- WhatsApp -->
+    <div class="container-boton">
+        <a href="https://wa.me/2612708252?text=Buen dia,quiero hacer un pedido/consulta " target="_blank">
+            <img class="boton" src="./assets/img/icono.jpg" alt="">
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>DisNeg © 2025 - Todos los derechos reservados</p>
+    </footer>
 
 </body>
 </html>

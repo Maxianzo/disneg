@@ -32,3 +32,19 @@
 }/*
 Custom Css
 */
+.container-boton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999; /* SUPERIOR A MODALES */
+}
+
+.boton {
+    width: 70px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.boton:hover {
+    transform: scale(1.1);
+}
