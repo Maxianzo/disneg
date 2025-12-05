@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="assets/css/fontawesome.min.css">
-
+<link rel="icon" type="image/png" href="/assets/img/logo.jpg">
     <style>
         body { background-color: #f5f5f5; }
 
@@ -21,7 +21,7 @@
         }
 
         .hero {
-            padding: 80px 0;
+       
             background: linear-gradient(to bottom right, #e8f3ff, #ffffff);
             text-align: center;
         }
@@ -68,10 +68,16 @@
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAVBAR  
+   
+  <a class="navbar-brand fs-3 fw-bold d-flex align-items-center" href="index.html">
+    <img src="assets/img/logo.jpg" alt="DisNeg" style="height:40px; width:auto; margin-right:8px;">
+</a> 
+
+-->
     <header class="py-3">
         <nav class="container navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand fs-3 fw-bold" href="index.html">DisNeg</a>
+            <a class="navbar-brand fs-3 fw-bold" href="index.html"><img src="/assets/img/logo.jpg"" alt="">DisNeg</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
@@ -349,6 +355,15 @@
             </div>
         </div>
     </div>
+
+
+    <!-- BOTÓN WHATSAPP -->
+<div class="container-boton">
+    <a href="https://wa.me/2612708252?text=Buen dia, quiero hacer un pedido/consulta" target="_blank">
+        <img src="./assets/img/icono.jpg" alt="WhatsApp">
+    </a>
+</div>
+
 <!-- ofertas  --> 
 
 <div class="modal fade" id="ofertaDistrolac" tabindex="-1" aria-labelledby="OfertaDistrolacLabel" aria-hidden="true">
@@ -411,17 +426,14 @@
     <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 
-    <!-- WhatsApp -->
-    <div class="container-boton">
-        <a href="https://wa.me/2612708252?text=Buen dia,quiero hacer un pedido/consulta " target="_blank">
-            <img class="boton" src="./assets/img/icono.jpg" alt="">
-        </a>
-    </div>
+  <!-- BOTÓN WHATSAPP -->
+
 
     <!-- FOOTER -->
     <footer>
         <p>DisNeg © 2025 - Todos los derechos reservados</p>
     </footer>
+
 
 </body>
 </html>
