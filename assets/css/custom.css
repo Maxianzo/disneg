@@ -49,3 +49,27 @@ Custom Css
 }
 
 
+
+        .faq-item {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+
+        .faq-question:hover {
+            background: lightblue;;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            background: beige;
+        }
+  
